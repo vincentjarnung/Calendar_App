@@ -137,31 +137,37 @@ class _SetActivityState extends State<SetActivity>
                             children: [
                               Expanded(
                                 flex: 2,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _selectStartDate(
-                                        context, _insertStartTime!);
-                                  },
-                                  child: Container(
-                                    child: Text(
-                                      DateFormat('EEE d MMMM')
-                                          .format(_insertStartTime!),
-                                      textScaleFactor: 1.5,
-                                    ),
+                                child: Container(
+                                  child: Text(
+                                    DateFormat('EEE d MMMM')
+                                        .format(_insertStartTime!),
+                                    textScaleFactor: 1.5,
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
+                                    FocusScope.of(context).unfocus();
                                     _selectStartTime(
                                         context, _insertStartTime!);
                                   },
                                   child: Container(
-                                    child: Text(
-                                      DateFormat('HH:mm')
-                                          .format(_insertStartTime!),
-                                      textScaleFactor: 1.5,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          DateFormat('HH:mm')
+                                              .format(_insertStartTime!),
+                                          textScaleFactor: 1.5,
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              FocusScope.of(context).unfocus();
+                                              _selectEndTime(
+                                                  context, _insertStartTime!);
+                                            },
+                                            icon: Icon(Icons.edit))
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -179,29 +185,36 @@ class _SetActivityState extends State<SetActivity>
                             children: [
                               Expanded(
                                 flex: 2,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    _selectEndDate(context, _insertEndTime!);
-                                  },
-                                  child: Container(
-                                    child: Text(
-                                      DateFormat('EEE d MMMM')
-                                          .format(_insertEndTime!),
-                                      textScaleFactor: 1.5,
-                                    ),
+                                child: Container(
+                                  child: Text(
+                                    DateFormat('EEE d MMMM')
+                                        .format(_insertEndTime!),
+                                    textScaleFactor: 1.5,
                                   ),
                                 ),
                               ),
                               Expanded(
                                 child: GestureDetector(
                                   onTap: () {
+                                    FocusScope.of(context).unfocus();
                                     _selectEndTime(context, _insertEndTime!);
                                   },
                                   child: Container(
-                                    child: Text(
-                                      DateFormat('HH:mm')
-                                          .format(_insertEndTime!),
-                                      textScaleFactor: 1.5,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          DateFormat('HH:mm')
+                                              .format(_insertEndTime!),
+                                          textScaleFactor: 1.5,
+                                        ),
+                                        IconButton(
+                                            onPressed: () {
+                                              FocusScope.of(context).unfocus();
+                                              _selectEndTime(
+                                                  context, _insertEndTime!);
+                                            },
+                                            icon: Icon(Icons.edit))
+                                      ],
                                     ),
                                   ),
                                 ),
