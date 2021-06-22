@@ -90,9 +90,6 @@ class DatabaseService {
     var db = await this.database;
     var result = Sqflite.firstIntValue(await db.rawQuery(
         'SELECT COUNT(*) FROM $tableName WHERE $year = $searchYear AND $month == $searchMonth AND $day == $searchDay'));
-
-    print(result.toString() + '  num');
-
     return result!;
   }
 }

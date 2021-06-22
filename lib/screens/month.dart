@@ -54,7 +54,7 @@ class _MonthScreenState extends State<MonthScreen> {
     var data = await _databaseService.getMonthlyActivities(
         year.toString(), month.toString());
     allMonthlyActivities = [];
-    data.forEach((element) async {
+    for (var element in data) {
       allMonthlyActivities.add({
         element.day: Activities(
           title: element.title,
@@ -71,18 +71,16 @@ class _MonthScreenState extends State<MonthScreen> {
                       endTime: DateTime.parse(element.endTime),
                     )).whenComplete(() => insertActivities(month, year));
           },
-          onLongClick: () {
-            _databaseService
-                .delete(element.id)
-                .whenComplete(() => insertActivities(month, year));
+          onDeleteClick: () {
+            _databaseService.delete(element.id).whenComplete(() => setState(() {
+                  insertActivities(month, year);
+                }));
           },
         )
       });
-      print(allMonthlyActivities);
-      print(element.day.toString() + '   day');
+
       var num = await _databaseService.getNum(
           year.toString(), month.toString(), element.day.toString());
-      print(element.id.toString() + '   id');
 
       int day = element.day;
       if (DateTime(_yearNum, _monthNum, day) ==
@@ -126,7 +124,8 @@ class _MonthScreenState extends State<MonthScreen> {
           stream: _controller.stream,
         );
       }
-    });
+    }
+    return;
   }
 
   void getMonthDates(int month, int selYear) {
@@ -225,7 +224,9 @@ class _MonthScreenState extends State<MonthScreen> {
         stream: _controller.stream,
       ));
     }
-    insertActivities(month, selYear).whenComplete(() => setState(() {}));
+    insertActivities(month, selYear).whenComplete(() {
+      setState(() {});
+    });
   }
 
   @override
@@ -237,7 +238,6 @@ class _MonthScreenState extends State<MonthScreen> {
         todaysActivities.add(e[_insertDay]!);
       }
     });
-    print(todaysActivities);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
