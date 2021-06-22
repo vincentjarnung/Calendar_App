@@ -69,12 +69,12 @@ class _MonthScreenState extends State<MonthScreen> {
                       info: element.info,
                       startTime: DateTime.parse(element.startTime),
                       endTime: DateTime.parse(element.endTime),
-                    )).whenComplete(() => insertActivities(month, year));
+                    )).whenComplete(() => getMonthDates(month, year));
           },
           onDeleteClick: () {
-            _databaseService.delete(element.id).whenComplete(() => setState(() {
-                  insertActivities(month, year);
-                }));
+            _databaseService
+                .delete(element.id)
+                .whenComplete(() => getMonthDates(month, year));
           },
         )
       });
