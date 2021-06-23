@@ -136,9 +136,14 @@ class _MonthScreenState extends State<MonthScreen> {
     int daysInLastMonth = DateTime(selYear, month, 0).day;
     int daysInMonth = DateTime(selYear, month + 1, 0).day;
 
+    /*int _weekNum() {
+      int dayOfYear = int.parse(DateFormat("D").format(widget.date));
+      return ((dayOfYear - widget.date.weekday + 10) / 7).floor();
+    }*/
+
     String firstDayWeekday =
         DateFormat('E').format(DateTime(selYear, month, 1));
-
+    print(firstDayWeekday);
     if (firstDayWeekday == 'Mon') start = 0;
     if (firstDayWeekday == 'Tue') start = 1;
     if (firstDayWeekday == 'Wed') start = 2;
@@ -146,7 +151,8 @@ class _MonthScreenState extends State<MonthScreen> {
     if (firstDayWeekday == 'Fri') start = 4;
     if (firstDayWeekday == 'Sat') start = 5;
     if (firstDayWeekday == 'Sun') start = 6;
-
+    print(start);
+    daysInLastMonth -= (start - 1);
     for (int i = start; i > 0; i--) {
       lastMonthItems.add(MonthItem(
         txt: daysInLastMonth,
@@ -158,7 +164,7 @@ class _MonthScreenState extends State<MonthScreen> {
         },
         stream: _controller.stream,
       ));
-      daysInLastMonth--;
+      daysInLastMonth++;
     }
     for (int i = 1; i <= daysInMonth; i++) {
       if (DateTime(_yearNum, _monthNum, i) ==
@@ -386,7 +392,7 @@ class _MonthScreenState extends State<MonthScreen> {
               startTime: DateTime(_insertYear, _insertMonth, _insertDay, 12),
               endTime: DateTime(_insertYear, _insertMonth, _insertDay, 13),
             ),
-          ).whenComplete(() => insertActivities(_monthNum, _yearNum));
+          ).whenComplete(() => getMonthDates(_monthNum, _yearNum));
         },
         child: Icon(Icons.add),
       ),

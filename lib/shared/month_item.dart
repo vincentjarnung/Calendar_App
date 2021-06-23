@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:calendar_app/main.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class MonthItem extends StatefulWidget {
   const MonthItem({
@@ -51,6 +52,11 @@ class _MonthItemState extends State<MonthItem> {
     super.dispose();
   }
 
+  int _weekNum() {
+    int dayOfYear = int.parse(DateFormat("D").format(widget.date));
+    return ((dayOfYear - widget.date.weekday + 10) / 7).floor();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -67,7 +73,7 @@ class _MonthItemState extends State<MonthItem> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.only(top: 3),
                 child: Text(
                   widget.txt.toString(),
                   style: TextStyle(
@@ -76,6 +82,9 @@ class _MonthItemState extends State<MonthItem> {
                           : Colors.grey[400]),
                 ),
               ),
+              widget.date.weekday == 1
+                  ? Text('w.' + _weekNum().toString())
+                  : Container(),
               widget.numActivities != 0
                   ? Container(
                       decoration: BoxDecoration(
@@ -83,7 +92,7 @@ class _MonthItemState extends State<MonthItem> {
                         color: Colors.blue,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(8),
                         child: Text(
                           '${widget.numActivities}',
                         ),

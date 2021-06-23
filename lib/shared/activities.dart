@@ -32,7 +32,7 @@ class _ActivitiesState extends State<Activities>
   @override
   void initState() {
     super.initState();
-
+    isAnimating = false;
     rotationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
     onTap = widget.onClick;
@@ -59,25 +59,36 @@ class _ActivitiesState extends State<Activities>
     double maxWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
       onTap: onTap,
-      onLongPress: () {
-        _start = -0.005;
-        rotationController!.repeat(reverse: true);
-        setState(() {
-          onTap = _stop;
-          isAnimating = true;
-        });
-      },
+      onLongPress: isAnimating
+          ? () {
+              setState(() {
+                _stop();
+              });
+            }
+          : () {
+              _start = -0.005;
+              rotationController!.repeat(reverse: true);
+              setState(() {
+                onTap = _stop;
+                isAnimating = true;
+              });
+            },
       child: Stack(
         children: [
           isAnimating
               ? Positioned(
-                  top: 0,
-                  right: 0,
-                  child: IconButton(
-                    onPressed: widget.onDeleteClick,
-                    icon: Icon(
-                      Icons.delete,
-                      size: 50,
+                  top: -10,
+                  right: 10,
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    child: IconButton(
+                      onPressed: widget.onDeleteClick,
+                      icon: Icon(
+                        Icons.cancel,
+                        size: 35,
+                        color: Colors.red,
+                      ),
                     ),
                   ),
                 )

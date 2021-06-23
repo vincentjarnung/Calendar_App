@@ -163,7 +163,7 @@ class _SetActivityState extends State<SetActivity>
                                         IconButton(
                                             onPressed: () {
                                               FocusScope.of(context).unfocus();
-                                              _selectEndTime(
+                                              _selectStartTime(
                                                   context, _insertStartTime!);
                                             },
                                             icon: Icon(Icons.edit))
