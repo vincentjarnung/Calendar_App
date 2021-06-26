@@ -27,15 +27,23 @@ class _ActivitiesState extends State<Activities>
     with SingleTickerProviderStateMixin {
   AnimationController? rotationController;
   double _start = 0;
-  VoidCallback? onTap;
-  bool isAnimating = false;
+
+  bool _isAnimating = false;
+  bool _isAllDay = false;
+
   @override
   void initState() {
     super.initState();
-    isAnimating = false;
+    _isAnimating = false;
     rotationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 100));
-    onTap = widget.onClick;
+
+    if (widget.startDate.hour == 0 &&
+        widget.startDate.minute == 0 &&
+        widget.endDate.hour == 23 &&
+        widget.endDate.minute == 59) {
+      _isAllDay = true;
+    }
   }
 
   @override
@@ -45,12 +53,10 @@ class _ActivitiesState extends State<Activities>
   }
 
   _stop() {
-    print('stopping');
     rotationController!.animateTo(0);
     _start = 0;
     setState(() {
-      onTap = widget.onClick;
-      isAnimating = false;
+      _isAnimating = false;
     });
   }
 
@@ -58,8 +64,14 @@ class _ActivitiesState extends State<Activities>
   Widget build(BuildContext context) {
     double maxWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
-      onTap: onTap,
-      onLongPress: isAnimating
+      onTap: _isAnimating
+          ? () {
+              setState(() {
+                _stop();
+              });
+            }
+          : widget.onClick,
+      onLongPress: _isAnimating
           ? () {
               setState(() {
                 _stop();
@@ -69,13 +81,12 @@ class _ActivitiesState extends State<Activities>
               _start = -0.005;
               rotationController!.repeat(reverse: true);
               setState(() {
-                onTap = _stop;
-                isAnimating = true;
+                _isAnimating = true;
               });
             },
       child: Stack(
         children: [
-          isAnimating
+          _isAnimating
               ? Positioned(
                   top: -10,
                   right: 10,
@@ -120,25 +131,37 @@ class _ActivitiesState extends State<Activities>
                       SizedBox(
                         height: 5,
                       ),
-                      Text(
-                        'Starts:',
-                        textScaleFactor: 1.2,
-                      ),
-                      Text(
-                        DateFormat('HH:mm').format(widget.startDate),
-                        textScaleFactor: 1.2,
-                      ),
-                      SizedBox(
-                        height: 5,
-                      ),
-                      Text(
-                        'Ends:',
-                        textScaleFactor: 1.2,
-                      ),
-                      Text(
-                        DateFormat('HH:mm').format(widget.endDate),
-                        textScaleFactor: 1.2,
-                      ),
+                      _isAllDay
+                          ? Text(
+                              'Last all day',
+                              textScaleFactor: 1.2,
+                            )
+                          : Container(
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'Starts:',
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    DateFormat('HH:mm')
+                                        .format(widget.startDate),
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  SizedBox(
+                                    height: 5,
+                                  ),
+                                  Text(
+                                    'Ends:',
+                                    textScaleFactor: 1.2,
+                                  ),
+                                  Text(
+                                    DateFormat('HH:mm').format(widget.endDate),
+                                    textScaleFactor: 1.2,
+                                  ),
+                                ],
+                              ),
+                            ),
                     ],
                   ),
                 ),

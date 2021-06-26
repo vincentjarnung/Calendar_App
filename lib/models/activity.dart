@@ -29,8 +29,17 @@ class ActivityModel {
       startTime: (json["startTime"]),
       endTime: json["endTime"]);
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMapInsert() => {
         "id": id,
+        "year": year,
+        "month": month,
+        "day": day,
+        "title": title,
+        "info": info,
+        "startTime": startTime,
+        "endTime": endTime,
+      };
+  Map<String, dynamic> toMapUpdate() => {
         "year": year,
         "month": month,
         "day": day,

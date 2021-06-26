@@ -54,24 +54,43 @@ class _MonthScreenState extends State<MonthScreen> {
     var data = await _databaseService.getMonthlyActivities(
         year.toString(), month.toString());
     allMonthlyActivities = [];
+
     for (var element in data) {
+      bool isAllDay = false;
+      var startDate = DateTime.parse(element.startTime);
+      var endDate = DateTime.parse(element.endTime);
+      String title = element.title;
+      String info = element.title;
+
+      if (startDate.hour == 0 &&
+          startDate.minute == 0 &&
+          endDate.hour == 23 &&
+          endDate.minute == 59) {
+        isAllDay = true;
+      }
+
       allMonthlyActivities.add({
         element.day: Activities(
-          title: element.title,
-          info: element.info,
-          startDate: DateTime.parse(element.startTime),
-          endDate: DateTime.parse(element.endTime),
+          title: title,
+          info: info,
+          startDate: startDate,
+          endDate: endDate,
           onClick: () {
             showDialog(
                 context: context,
                 builder: (_) => SetActivity(
-                      title: element.title,
-                      info: element.info,
-                      startTime: DateTime.parse(element.startTime),
-                      endTime: DateTime.parse(element.endTime),
+                      title: title,
+                      info: info,
+                      startTime: startDate,
+                      endTime: endDate,
+                      isAllDay: isAllDay,
+                      update: true,
+                      id: element.id,
                     )).whenComplete(() => getMonthDates(month, year));
           },
           onDeleteClick: () {
+            print(element.id);
+            print(title);
             _databaseService
                 .delete(element.id)
                 .whenComplete(() => getMonthDates(month, year));
@@ -136,22 +155,24 @@ class _MonthScreenState extends State<MonthScreen> {
     int daysInLastMonth = DateTime(selYear, month, 0).day;
     int daysInMonth = DateTime(selYear, month + 1, 0).day;
 
-    /*int _weekNum() {
-      int dayOfYear = int.parse(DateFormat("D").format(widget.date));
-      return ((dayOfYear - widget.date.weekday + 10) / 7).floor();
-    }*/
-
     String firstDayWeekday =
         DateFormat('E').format(DateTime(selYear, month, 1));
-    print(firstDayWeekday);
-    if (firstDayWeekday == 'Mon') start = 0;
-    if (firstDayWeekday == 'Tue') start = 1;
-    if (firstDayWeekday == 'Wed') start = 2;
-    if (firstDayWeekday == 'Thu') start = 3;
-    if (firstDayWeekday == 'Fri') start = 4;
-    if (firstDayWeekday == 'Sat') start = 5;
-    if (firstDayWeekday == 'Sun') start = 6;
-    print(start);
+
+    if (firstDayWeekday == 'Mon')
+      start = 0;
+    else if (firstDayWeekday == 'Tue')
+      start = 1;
+    else if (firstDayWeekday == 'Wed')
+      start = 2;
+    else if (firstDayWeekday == 'Thu')
+      start = 3;
+    else if (firstDayWeekday == 'Fri')
+      start = 4;
+    else if (firstDayWeekday == 'Sat')
+      start = 5;
+    else
+      start = 6;
+
     daysInLastMonth -= (start - 1);
     for (int i = start; i > 0; i--) {
       lastMonthItems.add(MonthItem(
@@ -244,7 +265,8 @@ class _MonthScreenState extends State<MonthScreen> {
         todaysActivities.add(e[_insertDay]!);
       }
     });
-
+    todaysActivities
+        .sort((a, b) => a.startDate.hour.compareTo(b.startDate.hour));
     return Scaffold(
       resizeToAvoidBottomInset: false,
       extendBody: true,

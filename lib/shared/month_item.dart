@@ -83,16 +83,19 @@ class _MonthItemState extends State<MonthItem> {
                 ),
               ),
               widget.date.weekday == 1
-                  ? Text('w.' + _weekNum().toString())
+                  ? Text(
+                      'w.' + _weekNum().toString(),
+                      style: TextStyle(color: Colors.green[800]),
+                    )
                   : Container(),
               widget.numActivities != 0
                   ? Container(
                       decoration: BoxDecoration(
-                        shape: BoxShape.circle,
+                        borderRadius: BorderRadius.circular(30),
                         color: Colors.blue,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8),
+                        padding: const EdgeInsets.fromLTRB(10, 4, 10, 4),
                         child: Text(
                           '${widget.numActivities}',
                         ),

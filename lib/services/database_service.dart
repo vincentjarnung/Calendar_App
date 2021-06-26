@@ -45,10 +45,20 @@ class DatabaseService {
     return database;
   }
 
-  void insertAlarm(ActivityModel activityModel) async {
+  Future insertAlarm(ActivityModel activityModel) async {
     var db = await this.database;
-    var result = await db.insert(tableName, activityModel.toMap());
+    var result = await db.insert(tableName, activityModel.toMapInsert());
     print(result);
+    return;
+  }
+
+  Future updateAlarm(int id, ActivityModel activityModel) async {
+    var db = await this.database;
+
+    var result = await db.update(tableName, activityModel.toMapUpdate(),
+        where: 'id = ?', whereArgs: [id]);
+    print(result);
+    return;
   }
 
   Future<int> delete(int id) async {

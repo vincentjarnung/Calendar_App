@@ -10,13 +10,19 @@ class SetActivity extends StatefulWidget {
       required this.title,
       required this.info,
       required this.startTime,
-      required this.endTime})
+      required this.endTime,
+      this.id,
+      this.isAllDay = false,
+      this.update = false})
       : super(key: key);
 
   final String title;
   final String info;
   final DateTime startTime;
   final DateTime endTime;
+  final id;
+  final bool isAllDay;
+  final bool update;
 
   @override
   _SetActivityState createState() => _SetActivityState();
@@ -34,10 +40,12 @@ class _SetActivityState extends State<SetActivity>
   String _insertInfo = '';
   DateTime? _insertStartTime;
   DateTime? _insertEndTime;
+  bool _switchVal = false;
 
   @override
   void initState() {
     super.initState();
+    _switchVal = widget.isAllDay;
     _controller =
         AnimationController(vsync: this, duration: Duration(milliseconds: 600));
     _scaleAnimation =
@@ -79,7 +87,7 @@ class _SetActivityState extends State<SetActivity>
             child: ScaleTransition(
               scale: _scaleAnimation!,
               child: Container(
-                height: 460,
+                height: 530,
                 width: maxWidth,
                 decoration: ShapeDecoration(
                   color: Colors.white,
@@ -127,6 +135,28 @@ class _SetActivityState extends State<SetActivity>
                         SizedBox(
                           height: 10,
                         ),
+                        Container(
+                          height: 60,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Activity last all day',
+                                textScaleFactor: 1.4,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 30),
+                                child: Switch(
+                                    value: _switchVal,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _switchVal = val;
+                                      });
+                                    }),
+                              ),
+                            ],
+                          ),
+                        ),
                         Text(
                           'Start Time:',
                         ),
@@ -146,31 +176,37 @@ class _SetActivityState extends State<SetActivity>
                                 ),
                               ),
                               Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    _selectStartTime(
-                                        context, _insertStartTime!);
-                                  },
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          DateFormat('HH:mm')
-                                              .format(_insertStartTime!),
-                                          textScaleFactor: 1.5,
+                                child: _switchVal
+                                    ? Text(
+                                        'All day',
+                                        textScaleFactor: 1.5,
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          FocusScope.of(context).unfocus();
+                                          _selectStartTime(
+                                              context, _insertStartTime!);
+                                        },
+                                        child: Container(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                DateFormat('HH:mm')
+                                                    .format(_insertStartTime!),
+                                                textScaleFactor: 1.5,
+                                              ),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                    _selectStartTime(context,
+                                                        _insertStartTime!);
+                                                  },
+                                                  icon: Icon(Icons.edit))
+                                            ],
+                                          ),
                                         ),
-                                        IconButton(
-                                            onPressed: () {
-                                              FocusScope.of(context).unfocus();
-                                              _selectStartTime(
-                                                  context, _insertStartTime!);
-                                            },
-                                            icon: Icon(Icons.edit))
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
                               ),
                             ],
                           ),
@@ -194,64 +230,113 @@ class _SetActivityState extends State<SetActivity>
                                 ),
                               ),
                               Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    FocusScope.of(context).unfocus();
-                                    _selectEndTime(context, _insertEndTime!);
-                                  },
-                                  child: Container(
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          DateFormat('HH:mm')
-                                              .format(_insertEndTime!),
-                                          textScaleFactor: 1.5,
+                                child: _switchVal
+                                    ? Text(
+                                        'All day',
+                                        textScaleFactor: 1.5,
+                                      )
+                                    : GestureDetector(
+                                        onTap: () {
+                                          FocusScope.of(context).unfocus();
+                                          _selectEndTime(
+                                              context, _insertEndTime!);
+                                        },
+                                        child: Container(
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                DateFormat('HH:mm')
+                                                    .format(_insertEndTime!),
+                                                textScaleFactor: 1.5,
+                                              ),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    FocusScope.of(context)
+                                                        .unfocus();
+                                                    _selectEndTime(context,
+                                                        _insertEndTime!);
+                                                  },
+                                                  icon: Icon(Icons.edit))
+                                            ],
+                                          ),
                                         ),
-                                        IconButton(
-                                            onPressed: () {
-                                              FocusScope.of(context).unfocus();
-                                              _selectEndTime(
-                                                  context, _insertEndTime!);
-                                            },
-                                            icon: Icon(Icons.edit))
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          height: 20,
+                          height: 30,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            ElevatedButton(
-                                style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateProperty.all(Colors.red)),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Cancel')),
-                            ElevatedButton(
-                                onPressed: () {
-                                  if (_formKey.currentState!.validate()) {
-                                    _databaseService.insertAlarm(ActivityModel(
-                                        year: _insertStartTime!.year,
-                                        month: _insertStartTime!.month,
-                                        day: _insertStartTime!.day,
-                                        title: _insertTitle,
-                                        info: _insertInfo,
-                                        startTime: _insertStartTime!.toString(),
-                                        endTime: _insertEndTime!.toString()));
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              ElevatedButton(
+                                  style: ButtonStyle(
+                                      backgroundColor:
+                                          MaterialStateProperty.all(
+                                              Colors.red)),
+                                  onPressed: () {
                                     Navigator.pop(context);
-                                  }
-                                },
-                                child: Text('Save')),
-                          ],
+                                  },
+                                  child: Text('Cancel')),
+                              ElevatedButton(
+                                  onPressed: () {
+                                    if (_formKey.currentState!.validate()) {
+                                      if (_switchVal) {
+                                        _insertStartTime = DateTime(
+                                            widget.startTime.year,
+                                            widget.startTime.month,
+                                            widget.startTime.day,
+                                            0,
+                                            0);
+                                        _insertEndTime = DateTime(
+                                            widget.endTime.year,
+                                            widget.endTime.month,
+                                            widget.endTime.day,
+                                            23,
+                                            59);
+                                      }
+                                      if (widget.update) {
+                                        _databaseService
+                                            .updateAlarm(
+                                                widget.id,
+                                                ActivityModel(
+                                                    year:
+                                                        _insertStartTime!.year,
+                                                    month:
+                                                        _insertStartTime!.month,
+                                                    day: _insertStartTime!.day,
+                                                    title: _insertTitle,
+                                                    info: _insertInfo,
+                                                    startTime: _insertStartTime!
+                                                        .toString(),
+                                                    endTime: _insertEndTime!
+                                                        .toString()))
+                                            .whenComplete(
+                                                () => Navigator.pop(context));
+                                      } else {
+                                        _databaseService
+                                            .insertAlarm(ActivityModel(
+                                                year: _insertStartTime!.year,
+                                                month: _insertStartTime!.month,
+                                                day: _insertStartTime!.day,
+                                                title: _insertTitle,
+                                                info: _insertInfo,
+                                                startTime: _insertStartTime!
+                                                    .toString(),
+                                                endTime:
+                                                    _insertEndTime!.toString()))
+                                            .whenComplete(
+                                                () => Navigator.pop(context));
+                                      }
+                                    }
+                                  },
+                                  child: Text('Save')),
+                            ],
+                          ),
                         )
                       ],
                     ),
