@@ -33,11 +33,8 @@ class _MonthScreenState extends State<MonthScreen> {
   int _insertMonth = 0;
   int _insertDay = 0;
 
-  int _selId = 0;
   String _selTitle = '';
   String _selInfo = '';
-  String _selStartDate = '';
-  String _selEndDate = '';
 
   void initState() {
     _databaseService.initializeDatabase();
@@ -115,7 +112,6 @@ class _MonthScreenState extends State<MonthScreen> {
               _insertYear = year;
               _insertMonth = month;
               _insertDay = day;
-              _selId = element.id;
 
               _selDate = DateTime(year, month, day);
               _controller.add(DateTime(year, month, day));
@@ -134,7 +130,6 @@ class _MonthScreenState extends State<MonthScreen> {
               _insertYear = year;
               _insertMonth = month;
               _insertDay = day;
-              _selId = element.id;
 
               _selDate = DateTime(year, month, day);
               _controller.add(DateTime(year, month, day));
@@ -203,8 +198,7 @@ class _MonthScreenState extends State<MonthScreen> {
                 _insertDay = i;
                 _selTitle = '';
                 _selInfo = '';
-                _selStartDate = '';
-                _selEndDate = '';
+
                 _selDate = DateTime(selYear, month, i);
                 _controller.add(DateTime(selYear, month, i));
               });
@@ -226,8 +220,7 @@ class _MonthScreenState extends State<MonthScreen> {
                 _insertDay = i;
                 _selTitle = '';
                 _selInfo = '';
-                _selStartDate = '';
-                _selEndDate = '';
+
                 _selDate = DateTime(selYear, month, i);
                 _controller.add(DateTime(selYear, month, i));
               });

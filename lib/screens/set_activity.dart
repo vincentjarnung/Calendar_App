@@ -70,7 +70,6 @@ class _SetActivityState extends State<SetActivity>
   @override
   Widget build(BuildContext context) {
     double maxWidth = MediaQuery.of(context).size.width;
-    var mediaQuery = MediaQuery.of(context);
 
     if (!_insertStartTime!.compareTo(_insertEndTime!).isNegative) {
       _insertEndTime = _insertStartTime;
@@ -350,7 +349,7 @@ class _SetActivityState extends State<SetActivity>
     );
   }
 
-  Future<Null> _selectStartDate(
+  /* Future<Null> _selectStartDate(
       BuildContext context, DateTime selectedDate) async {
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -378,7 +377,7 @@ class _SetActivityState extends State<SetActivity>
         _insertEndTime = DateTime(picked.year, picked.month, picked.day,
             _insertEndTime!.hour, _insertEndTime!.minute);
       });
-  }
+  }*/
 
   Future<Null> _selectStartTime(
       BuildContext context, DateTime selectedTime) async {

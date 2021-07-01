@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:calendar_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -29,6 +28,7 @@ class MonthItem extends StatefulWidget {
 
 class _MonthItemState extends State<MonthItem> {
   DateTime? selDate;
+  // ignore: cancel_subscriptions
   StreamSubscription? streamSubscription;
 
   @override

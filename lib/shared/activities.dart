@@ -138,6 +138,7 @@ class _ActivitiesState extends State<Activities>
                             )
                           : Container(
                               child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Starts:',

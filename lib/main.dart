@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        textTheme: GoogleFonts.patrickHandTextTheme(),
+        textTheme: GoogleFonts.robotoTextTheme(),
         primarySwatch: Colors.blue,
       ),
       home: MonthScreen(),
